@@ -1,19 +1,21 @@
-html,body{
+html, body {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
     background-color: black;
 }
-.calc-container{
+
+.calc-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    border-collapse: separate; 
+    border-collapse: separate;
 }
-.calculator{
+
+.calculator {
     display: flex;
     height: 550px;
     width: 280px;
@@ -22,7 +24,8 @@ html,body{
     background-color: #050a30;
     flex-wrap: wrap;
 }
-.header-box{
+
+.header-box {
     background-color: #333;
     display: flex;
     width: 100%;
@@ -32,7 +35,8 @@ html,body{
     border-radius: 10px;
     padding: 5px;
 }
-.header-name{
+
+.header-name {
     color: violet;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
@@ -40,13 +44,15 @@ html,body{
     height: 20px;
     flex: 80%;
 }
-.header-options{
+
+.header-options {
     width: 10px;
     height: 10px;
     margin-left: auto;
     flex: 20%;
 }
-.numOutput{
+
+.numOutput {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,7 +61,8 @@ html,body{
     margin-left: auto;
     flex: 100%;
 }
-.line{
+
+.line {
     display: flex;
     justify-content: center;
     background-color: #7ec8e3;
@@ -65,6 +72,7 @@ html,body{
     margin-right: 0;
     margin: 0 auto;
 }
+
 .bottom-box {
     display: flex;
     width: 100%;
@@ -83,14 +91,20 @@ html,body{
     height: 100%;
     border-radius: 10px;
 }
-.bottom-content > div {
-    flex:25%;
-    background-color: #001F3D; /* Just for visualization */
+
+/* Style the button elements */
+.bottom-content > button {
+    flex: 25%;
+    background-color: #001F3D;
     text-align: center;
-    line-height: 40px; /* Vertically center content */
+    line-height: 40px;
+    border: none; /* Remove the default button border */
+    outline: none; /* Remove the default button focus outline */
+    color: white;
+    cursor: pointer;
 }
-.bottom-content >div:hover{
-    background-color: #333; /* Darken the background color on hover */
-    color: white; /* Change text color to white on hover */
-    cursor: pointer; /* Change cursor to indicate interactivity */
+
+/* Style the hover effect */
+.bottom-content > button:hover {
+    background-color: #333;
 }
