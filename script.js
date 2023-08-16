@@ -31,15 +31,16 @@ document.addEventListener('DOMContentLoaded', (e) => {
     operatorButtons.forEach(operator => { 
         operator.addEventListener("click", () => {
             if(currentValue !== ''){
-                console.log("Clicked operator equals", operator.textContent);
                 operatorHold = operator.textContent
+                console.log(operatorHold);
                 console.log(operatorHold, "Trzymana w tym gownie")
                 console.log("currentValue:" + currentValue)
                 console.log("previos value equals" + previousValue )
                 if(!operatorClicked){
                     previousValue = parseFloat(currentValue);
                 }else{
-                    previousValue = operators[operator.textContent](currentValue, previousValue);
+                    previousValue = operators[operatorHold](currentValue, previousValue);
+                    console.log("StoreOperator value" + operatorHold.textContent)
                     console.log("Value after performing certain action " + previousValue);
                     input.value = previousValue
                 }
@@ -51,21 +52,25 @@ document.addEventListener('DOMContentLoaded', (e) => {
     })
     const equalButton = document.getElementById('equal');
     equalButton.addEventListener('click', () => {
-    if (currentValue !== '') {
-
-        previousValue = operators[operator.textContent](previousValue, parseFloat(currentValue));
-        console.log("Equal button clicked" + previousValue);
-        input.value = previousValue;
-        currentValue = '';
-        operatorClicked = false;
-    }
-});
+        if (currentValue !== '') {
+            if (operatorHold !== null) {
+                previousValue = operators[operatorHold](previousValue, parseFloat(currentValue));
+                console.log("Equal button clicked: " + previousValue);
+                input.value = previousValue;
+                operatorClicked = true; // Next input is treated as a new operand
+                operatorHold = null; // Reset the operatorHold for the next operation
+            } else {
+                console.log("No operator selected.");
+            }
+        }
+    });
     const clearButton = document.getElementById("clear");
     clearButton.addEventListener("click", function() {
         input.value = "";
         currentValue = '';
         previousValue = '';
         selectedOperator = null;
+        operatorHold = null;
     });
     const eraseOneChar = document.getElementById("erase");
     eraseOneChar.addEventListener("click", () => {
