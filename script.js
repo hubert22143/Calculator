@@ -9,58 +9,57 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const numberButtons = Array.from(document.querySelectorAll('.calc'));
     numberButtons.forEach(button => {
         button.addEventListener('click', (e) => {
+            if (operatorClicked) {
+                operatorClicked = false; // Reset operatorClicked flag
+            }
             currentValue += e.target.textContent;
             input.value = currentValue;
         })
     })
     const operators = {
-        '+': (currentValue,previousValue) => currentValue + previousValue  ,
-        '-': (currentValue,previousValue) => currentValue - previousValue ,
-        '/': (currentValue,previousValue) => currentValue / previousValue,
-        '%': (currentValue,previousValue) => currentValue % previousValue,
-        '*': (currentValue,previousValue) => currentValue*previousValue,
-        '=': (currentValue,previousValue) => currentValue,
+        '+': (currentValue, previousValue) => parseFloat(currentValue) + parseFloat(previousValue),
+        '-': (currentValue, previousValue) => parseFloat(currentValue) - parseFloat(previousValue),
+        '/': (currentValue, previousValue) => parseFloat(currentValue) / parseFloat(previousValue),
+        '%': (currentValue, previousValue) => parseFloat(currentValue) % parseFloat(previousValue),
+        '*': (currentValue, previousValue) => parseFloat(currentValue) * parseFloat(previousValue),
+        '=': (currentValue, previousValue) => parseFloat(previousValue),
     };
     const operatorButtons = Array.from(document.querySelectorAll('.operator-button'));
     let previousValue = 0;
+    let operatorClicked = false;
+    let operatorHold = null;
     operatorButtons.forEach(operator => { 
         operator.addEventListener("click", () => {
             if(currentValue !== ''){
-                const operatorSymbol = operator.textContent
-                console.log(operatorSymbol)
+                console.log("Clicked operator equals", operator.textContent);
+                operatorHold = operator.textContent
+                console.log(operatorHold, "Trzymana w tym gownie")
                 console.log("currentValue:" + currentValue)
-                previousValue = operators[operatorSymbol](parseFloat(currentValue), parseFloat(previousValue));
-                console.log("previousValue:"+previousValue)
-                input.value = previousValue;
-
+                console.log("previos value equals" + previousValue )
+                if(!operatorClicked){
+                    previousValue = parseFloat(currentValue);
+                }else{
+                    previousValue = operators[operator.textContent](currentValue, previousValue);
+                    console.log("Value after performing certain action " + previousValue);
+                    input.value = previousValue
+                }
                 currentValue = '';
+                operatorClicked = true;
             }
+
         })
-
     })
+    const equalButton = document.getElementById('equal');
+    equalButton.addEventListener('click', () => {
+    if (currentValue !== '') {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        previousValue = operators[operator.textContent](previousValue, parseFloat(currentValue));
+        console.log("Equal button clicked" + previousValue);
+        input.value = previousValue;
+        currentValue = '';
+        operatorClicked = false;
+    }
+});
     const clearButton = document.getElementById("clear");
     clearButton.addEventListener("click", function() {
         input.value = "";
