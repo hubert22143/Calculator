@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', (e) => {
     const input = document.getElementById('input');
+    const getValuesCalculator = document.querySelector('.calc-ops');
     input.value = '';
     let currentValue = 0;
     let previousValue = null;
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             input.value += button.textContent;
             currentValue = input.value;
             console.log("Button currentValue : " , currentValue)
+            updateCalcOps();
         })
     })
 
@@ -26,12 +28,18 @@ document.addEventListener('DOMContentLoaded', (e) => {
             input.value = '';
             selectedOperator = button.textContent;
             console.log("The current operanda" , previousValue , selectedOperator , currentValue);
+            updateCalcOps();
         })
     })
     let result = null;
 
     function operatorsCalculations(selectedOperator){
         switch(selectedOperator){
+            case "=":
+                result = previousValue;
+                input.value = result;
+                currentValue = input.value;
+                break;
             case "+":
                 result = parseFloat(previousValue) + parseFloat(currentValue);
                 input.value = result;
@@ -80,6 +88,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     equalsButton.addEventListener('click', () => {
         if(selectedOperator!== null){
             operatorsCalculations(selectedOperator);
+            updateCalcOps();
         }
     });
     const clearButton = document.querySelector('.calc-ac');
@@ -100,4 +109,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
         document.execCommand('copy');
         alert("Copied");
     })
+    function updateCalcOps(){
+        if(previousValue === null){
+            previousValue = '';
+        }
+        getValuesCalculator.textContent = `${previousValue || '' } ${selectedOperator || ''}   ${currentValue || ' '}`;
+    }
 });
