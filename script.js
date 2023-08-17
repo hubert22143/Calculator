@@ -1,88 +1,103 @@
 document.addEventListener('DOMContentLoaded', (e) => {
     const input = document.getElementById('input');
     input.value = '';
-    let currentValue = '';
+    let currentValue = 0;
+    let previousValue = null;
     input.addEventListener('input', () => {
-        input.value = input.value.replace(/[^\d+\-*\/%]/g, '');
         currentValue = input.value;
-    })
-    const numberButtons = Array.from(document.querySelectorAll('.calc'));
-    numberButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            if (operatorClicked) {
-                operatorClicked = false; // Reset operatorClicked flag
-            }
-            currentValue += e.target.textContent;
-            input.value = currentValue;
-        })
-    })
-    const operators = {
-        '+': (currentValue, previousValue) => parseFloat(currentValue) + parseFloat(previousValue),
-        '-': (currentValue, previousValue) => parseFloat(currentValue) - parseFloat(previousValue),
-        '/': (currentValue, previousValue) => parseFloat(currentValue) / parseFloat(previousValue),
-        '%': (currentValue, previousValue) => parseFloat(currentValue) % parseFloat(previousValue),
-        '*': (currentValue, previousValue) => parseFloat(currentValue) * parseFloat(previousValue),
-        '=': (currentValue, previousValue) => parseFloat(previousValue),
-    };
-    const operatorButtons = Array.from(document.querySelectorAll('.operator-button'));
-    let previousValue = 0;
-    let operatorClicked = false;
-    let operatorHold = null;
-    operatorButtons.forEach(operator => { 
-        operator.addEventListener("click", () => {
-            if(currentValue !== ''){
-                operatorHold = operator.textContent
-                console.log(operatorHold);
-                console.log(operatorHold, "Trzymana w tym gownie")
-                console.log("currentValue:" + currentValue)
-                console.log("previos value equals" + previousValue )
-                if(!operatorClicked){
-                    previousValue = parseFloat(currentValue);
-                }else{
-                    previousValue = operators[operatorHold](currentValue, previousValue);
-                    console.log("StoreOperator value" + operatorHold.textContent)
-                    console.log("Value after performing certain action " + previousValue);
-                    input.value = previousValue
-                }
-                currentValue = '';
-                operatorClicked = true;
-            }
+    });
 
+
+    const numberButtons = document.querySelectorAll('.calc')
+    numberButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            input.value += button.textContent;
+            currentValue = input.value;
+            console.log("Button currentValue : " , currentValue)
         })
     })
-    const equalButton = document.getElementById('equal');
-    equalButton.addEventListener('click', () => {
-        if (currentValue !== '') {
-            if (operatorHold !== null) {
-                previousValue = operators[operatorHold](previousValue, parseFloat(currentValue));
-                console.log("Equal button clicked: " + previousValue);
-                input.value = previousValue;
-                operatorClicked = true; // Next input is treated as a new operand
-                operatorHold = null; // Reset the operatorHold for the next operation
-            } else {
-                console.log("No operator selected.");
-            }
+
+
+    let selectedOperator = null;
+    const operatorButtons = document.querySelectorAll('.operator-button');
+    operatorButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            previousValue = currentValue;
+            input.value = '';
+            selectedOperator = button.textContent;
+            console.log("The current operanda" , previousValue , selectedOperator , currentValue);
+        })
+    })
+    let result = null;
+
+    function operatorsCalculations(selectedOperator){
+        switch(selectedOperator){
+            case "+":
+                result = parseFloat(previousValue) + parseFloat(currentValue);
+                input.value = result;
+                currentValue = input.value;
+                console.log(result);
+                break;
+            case "-":
+                result = parseFloat(previousValue) - parseFloat(currentValue);
+                input.value = result;
+                currentValue = input.value;
+                break;
+            case "/":
+                if(parseFloat(currentValue) !==0){
+                    result = parseFloat(previousValue) / parseFloat(currentValue);
+                    input.value = result;
+                    currentValue = input.value;
+                }else{
+                    result = "Error: Can't divide by 0";
+                    input.value = result;
+                    currentValue = input.value;
+                }
+                break;
+            case "*":
+                result = parseFloat(previousValue) * parseFloat(currentValue);
+                input.value = result;
+                currentValue = input.value;
+                break;
+            case "%":
+                result = parseFloat(previousValue) % parseFloat(currentValue);
+                input.value = result;
+                currentValue = input.value;
+                break;
+            case ".":
+                if(!currentValue.includes(".")){
+                    input.value += ".";
+                    currentValue = input.value;
+                }
+                break;
+            default:
+                 return;
+        }
+        previousValue = null;
+
+    }
+    const equalsButton = document.getElementById('equal');
+    equalsButton.addEventListener('click', () => {
+        if(selectedOperator!== null){
+            operatorsCalculations(selectedOperator);
         }
     });
-    const clearButton = document.getElementById("clear");
-    clearButton.addEventListener("click", function() {
-        input.value = "";
-        currentValue = '';
-        previousValue = '';
+    const clearButton = document.querySelector('.calc-ac');
+    clearButton.addEventListener('click', () => {
+        input.value = ''
+        currentValue = 0;
+        previousValue = 0;
         selectedOperator = null;
-        operatorHold = null;
-    });
-    const eraseOneChar = document.getElementById("erase");
-    eraseOneChar.addEventListener("click", () => {
-        input.value = input.value.slice(0, -2);
+        result = null;
     })
-    const copyButton = document.getElementById("copy");
-    copyButton.addEventListener("click", () => {
+    const eraseOneChar = document.querySelector('.calc-erase');
+    eraseOneChar.addEventListener('click', () => {
+        input.value = input.value.slice(0,-1);
+    })
+    const copyValue = document.querySelector('.calc-copyContent');
+    copyValue.addEventListener('click', () => {
         input.select();
-        document.execCommand("Copy");
+        document.execCommand('copy');
         alert("Copied");
-    });
-
-
-
+    })
 });
